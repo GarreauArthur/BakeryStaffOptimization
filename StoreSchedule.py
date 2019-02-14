@@ -37,7 +37,9 @@ class StoreSchedule:
 
     def json_repr(self):
         """
-        Generates a dict (basically a json) representation of the StoreSchedule. It contains all the assignments, the score of the schedule and all the warnings about broken rules
+        Generates a dict (basically a json) representation of the StoreSchedule.
+        It contains all the assignments, the score of the schedule and all the
+        warnings about broken rules
         :return: dict
         """
         score, warnings = self.get_fitness()

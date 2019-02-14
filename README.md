@@ -27,3 +27,22 @@ A config file determines bonus and penalties for respecting or not each of the c
 For crossovers, the days are randomly swapped between the two chromosomes.
 
 Json files are used as inputs and outputs to easily interface with the web app developped in parallel.
+
+
+
+* **config.txt** : un fichier texte contenant des paramètres
+* **Constants.py** : une classe qui parse config.txt, ça aurait été plus simple d'avoir un seul fichier constants.py avec les contantes directement
+* **ScheduleAssignment** : une tâche à faire dans le schedule
+* **ScheduleOptimizer.py** : implements a genetic algorithm to solve this optimization problem
+* **StoreSchedule** : A Store's schedule, what we are trying to optimize (1 week = 1 individual of the pop = 1 chromosome)
+* **Visualizer** : A quickly done visualizer for generated schedules
+* **Worker** : Object defining the workers
+* **WorkerSchedule** : Defines the schedule of the worker
+* **Workforce** :
+
+
+The chromosomes are implemented as schedule objects (StoreSchedule) which main attribute is a list of assignment objects (ScheduleAssignment). A schedule covers a week.
+
+
+
+
