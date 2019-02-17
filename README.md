@@ -28,7 +28,9 @@ For crossovers, the days are randomly swapped between the two chromosomes.
 
 Json files are used as inputs and outputs to easily interface with the web app developped in parallel.
 
+--------------
 
+## Analyse du code
 
 * **config.txt** : un fichier texte contenant des paramètres
 * **Constants.py** : une classe qui parse config.txt, ça aurait été plus simple d'avoir un seul fichier constants.py avec les contantes directement
@@ -43,6 +45,35 @@ Json files are used as inputs and outputs to easily interface with the web app d
 
 The chromosomes are implemented as schedule objects (StoreSchedule) which main attribute is a list of assignment objects (ScheduleAssignment). A schedule covers a week.
 
+### Input
+
+The input is a JSON file, composed of 2 main elemnts:
+
+* "schedule": is an object containing an object for every day of the week, each containing a list of tasks
+* "worker": is a list containing object representing the staff members (workers)
 
 
+    {
+        "schedule": {
+            "mon": [
+                [job, start, end, store, importance]
+            ],
+        }
 
+        "worker": [
+            {first name, last name, normal hours, hours left, jobs, store, rest}
+        ]
+    }
+
+
+Let's find where the input is processed
+
+ScheduleOptimizer.py "has a main". It first load the data from the json file, and
+passed it to the constructor of Scheduler. The data is then given to a StoreSchedule.
+StoreSchedule create the workforce. Then Scheduler.generate_initial_population()
+is called and generates an arbitrary schedule that fits the desired schedule, but
+not the workers constraints.
+
+---------------
+Pour générer les diagrammes j'ai utilisé pyreverse (inclus dans pylint)
+pyreverse -o png ./*.py
