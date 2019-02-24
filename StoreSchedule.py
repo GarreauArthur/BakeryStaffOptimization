@@ -6,6 +6,8 @@ from Workforce import Workforce
 from Constants import Constants
 from copy import deepcopy, copy
 import _pickle as cPickle
+import numpy as np
+from operator import add
 
 
 class StoreSchedule:
@@ -78,9 +80,16 @@ class StoreSchedule:
 
         # Using 12 min blocks for performance increase
         for assignment in self.schedule:
-            assignment_as_minutes = [int(assignment.end * 12 >= minutes > assignment.start * 12) for minutes in range(288)]
+            # 24*12 = 288 blocks of 12mins in a day
+            # create a list of 1 if 12min block is in assignement, 0 otherwise
+            # assignment :                         -,-,-,-,-,-,-,-,-,-
+            # assignment_as_minutes : [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0...]
+
+            assignment_as_minutes = np.array([int(assignment.end * 12 >= minutes > assignment.start * 12) for minutes in range(288)])
+
             if assignment.job in repr[assignment.day].keys():
-                repr[assignment.day][assignment.job] = [assignment_as_minutes[minutes] + repr[assignment.day][assignment.job][minutes] for minutes in range(288)]
+                #repr[assignment.day][assignment.job] = [assignment_as_minutes[minutes] + repr[assignment.day][assignment.job][minutes] for minutes in range(288)]
+                repr[assignment.day][assignment.job] += assignment_as_minutes
             else:
                 repr[assignment.day][assignment.job] = assignment_as_minutes
 
