@@ -1,0 +1,25 @@
+{
+    "assignments":[
+        {
+            "worker_id":1,
+            "StartTime":7,
+            "EndTime":12,
+            "WeekDay":"wed",
+            "JobName":"1"
+        },
+        {
+            "worker_id":1,
+            "StartTime":7.75,
+            "EndTime":10.5,
+            "WeekDay":"fri",
+            "JobName":"1"
+        },
+        {
+            "worker_id":1,
+            "StartTime":6,
+            "EndTime":14,
+            "WeekDay":"sun",
+            "JobName":"1"
+        },
+      ]
+}

@@ -1,0 +1,84 @@
+{
+  "schedule": {
+    "mon": [
+      [
+        1,
+        4,
+        7,"store1", "necessary"
+      ]
+    ],
+    "tue": [
+      [
+        1,
+        4,
+        7,"store1", "necessary"
+
+      ]
+    ],
+    "wed": [
+      [
+        1,
+        4,
+        7,"store1", "necessary"
+
+      ]
+    ],
+    "thu": [
+      [
+        1,
+        4,
+        7,"store1", "necessary"
+
+      ]
+    ],
+    "fri": [
+      [
+        1,
+        4,
+        7,"store1", "necessary"
+
+      ]
+    ],
+    "sat": [
+      [
+        1,
+        4,
+        7,"store1", "necessary"
+
+      ]
+    ],
+    "sun": [
+      [
+        1,
+        4,
+        7,"store1", "necessary"
+
+      ]
+    ]
+  },
+  "workers": [
+    {
+      "first name":"bob",
+      "last name":"bob",
+      "store":"store1",
+      "normal hours": 35,
+      "hours left": 35,
+      "jobs": [
+        1
+      ],
+      "rest": [
+        [
+          "mon",
+          8,
+          12
+        ],
+        [
+          "tue",
+          14,
+          16.5
+        ]
+      ],
+      "id": 1
+    }
+  ]
+}
