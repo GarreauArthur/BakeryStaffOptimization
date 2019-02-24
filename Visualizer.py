@@ -80,7 +80,8 @@ class Visualizer:
         end_px = (end - 5) * 20 + 100
         x = 100 + days.index(day) * 100
         if bg:
-            self.canvas.create_line(x + offset, start_px, x + offset, end_px, width=width, fill='dark ' + colors[jobs.index(job)])
+          #            self.canvas.create_line(x + offset, start_px, x + offset, end_px, width=width, fill='dark ' + colors[jobs.index(job)])
+            self.canvas.create_line(x + offset, start_px, x + offset, end_px, width=width, fill='dark green')
         else:
-            self.canvas.create_line(x + offset, start_px, x + offset, end_px, width=width*0.5, fill=colors[jobs.index(job)])
+            self.canvas.create_line(x + offset, start_px, x + offset, end_px, width=width*0.5, fill='blue')
             self.canvas.create_text(x + offset, (start_px + end_px)/2, text=name, angle=90, fill='white')

@@ -230,8 +230,7 @@ class StoreSchedule:
                 score -= self.constants.weekly_rest
                 warnings.append('{} {} n\'a pas 24h de repos consécutif dans la semaine'.format(worker.first_name, worker.last_name))
 
-        # A worker can not be scheduled in 2 different tasks at the same time
-        for worker in self.workforce.workers:
+            # A worker can not be scheduled in 2 different tasks at the same time
             overlap_count = worker.get_tasks_overlap_count()
             if overlap_count:
                 warnings.append('{} {} est assigné à deux postes en même temps'.format(worker.first_name, worker.last_name))
@@ -261,21 +260,18 @@ class StoreSchedule:
             score -= errors * self.constants.scheduled_on_time_off
 
         # A worker can not have more than 3h of downtime between assignments
-        for worker in self.workforce.workers:
             errors = worker.get_3_hr_gap_count()
             if errors:
                 warnings.append('{} {} a {} trous de plus de 3h dans son emploi du temps'.format(worker.first_name, worker.last_name, errors))
             score -= errors * self.constants.day_gap
 
         # Max 8 hours scheduled daily
-        for worker in self.workforce.workers:
             hours_over = worker.get_hours_over_8_count()
             if hours_over:
                 warnings.append('{} {} Cumule {} heures au delas des 8 journalières sur la semaine'.format(worker.first_name, worker.last_name, hours_over))
             score -= max(0, hours_over) * self.constants.more_8_daily_hours
 
         # At least 11 consecutive hours unscheduled per day
-        for worker in self.workforce.workers:
             # TODO warning
             score += worker.get_11_hr_gap_count() * self.constants.daily_rest
 
@@ -293,14 +289,12 @@ class StoreSchedule:
                 warnings.append('{} {} travaille plus de 46h (hebdomadaire)'.format(worker.first_name, worker.last_name))
 
         # No more than 42 hours from mon to fri
-        for worker in self.workforce.workers:
             hour_count = worker.get_hours_count(['mon', 'tue', 'wed', 'thu', 'fri'])
             if hour_count > 42:
                 score -= (42 - hour_count) * self.constants.above_42
                 warnings.append('{} {} travaille plus de 42h entre lundi et vendredi'.format(worker.first_name, worker.last_name))
 
         # Least possible overtime
-        for worker in self.workforce.workers:
             if not worker.overtime_counter:
                 # No past overtime to catch up to
                 overtime = worker.get_overtime()
@@ -316,7 +310,6 @@ class StoreSchedule:
                 score -= max(0, worker.get_overtime() - 0.15*worker.normal_hours) * self.constants.too_much_overtime_dec
 
         # No multi-site scheduling on the same day
-        for worker in self.workforce.workers:
             occurrences, insufficient_commute_time = worker.works_different_shops_same_day()
             if occurrences:
                 warnings.append('{} {} est affecté {} fois sur des sites différents, {} fois avec un temps insuffisant de trajet'.format(worker.first_name, worker.last_name, occurrences, insufficient_commute_time))

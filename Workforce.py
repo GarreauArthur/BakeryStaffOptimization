@@ -9,15 +9,34 @@ class Workforce:
         self.workers.append(worker)
 
     def get_best_worker_for_job(self, job, day, start, end):
-        job_matching_importance = 1
-        hours_worked_importance = 1
+        """
+        Go through the list of workers, compute a score and return the worker
+        with the best score
+        """
 
-        scores = [0]*len(self.workers)
+        job_matching_importance = 10
+        hours_worked_importance = 1
+        scores = [0]*len(self.workers) # list of zeros
+        
         for worker in self.workers:
-            scores[self.workers.index(worker)] += worker.remaining_hours/worker.normal_hours*job_matching_importance
+            
+            index = self.workers.index(worker)
+
+            if worker.schedule.is_busy(day, start, end):
+                scores[index] = 0   
+                break
+
+            #scores[index] += worker.remaining_hours/worker.normal_hours*job_matching_importance
+            if worker.remaining_hours <= 0:
+                scores[index] -= 10
+            else:
+                scores[index] += worker.remaining_hours
+
             if job in worker.jobs:
-                scores[self.workers.index(worker)] += hours_worked_importance/(worker.jobs.index(job)+1)
-            scores[self.workers.index(worker)] = 0 if worker.schedule.is_busy(day, start, end) else scores[self.workers.index(worker)]
+                scores[index] += 100 #hours_worked_importance/(worker.jobs.index(job)+1) # lol wtf
+            else:
+                scores[index] -= 100
+            
             # print(worker.first_name, scores[self.workers.index(worker)])
         return self.workers[scores.index(max(scores))]
 

@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import json
+import datetime
 
 
 class Scheduler:
@@ -22,8 +23,9 @@ class Scheduler:
         self.input_data = input_data
         self.constants = Constants()
 
+        # create an empty schedule, with a workforce, we want to optimize self.initial_schedule.schedule
         self.initial_schedule = StoreSchedule(self.input_data)
-        self.generate_initial_schedule()
+        self.generate_initial_schedule() # init self.initial_schedule.desired_schedule
         self.population = []  # type: List[StoreSchedule]
         self.new_generation = []  # type: List[StoreSchedule]
         self.generate_initial_population()
@@ -36,8 +38,11 @@ class Scheduler:
         visualizer_id = 0
         for day, day_schedule in self.input_data['schedule'].items():
             for job, start, end, store, importance in day_schedule:
+                # pretty much convert the JSON into a list of ScheduleAssignment
                 self.initial_schedule.desired_schedule.append(ScheduleAssignment(None, store, job, day, start, end, visualizer_id, importance))
+                # select the best worker for the job using a very weird score
                 selected_worker = self.initial_schedule.workforce.get_best_worker_for_job(job, day, start, end)
+                # initialize self.initial_schedule.schedule with the "best worker"
                 self.initial_schedule.assign(ScheduleAssignment(selected_worker, store, job, day, start, end, visualizer_id))
                 visualizer_id += 1
         self.initial_schedule.visualizer_col_number = visualizer_id
@@ -112,6 +117,7 @@ if __name__ == '__main__':
     with open('testDataIn.json', 'r') as f:
         data_in = json.load(f)
 
+    print(data_in)
     scheduler = Scheduler(data_in)
 
     bests, worsts, averages = [], [], []
@@ -123,6 +129,7 @@ if __name__ == '__main__':
 
         # Logarithmic decay for the mutation rate
         current_mutation_rate = scheduler.constants.mutation_rate * scheduler.constants.mutation_rate_factor**generation
+        current_mutation_rate = 0.01
 
         print('Generation {} : Best : {}, Worst : {}, Average : {}, Pop size : {}, Mutation rate : {}%'.format(generation, best[0], worst[0], average, pop_size, round(current_mutation_rate*100, 3)))
         bests.append(best[0])
@@ -137,6 +144,7 @@ if __name__ == '__main__':
             plt.pause(0.00001)
 
         # Linear regression over the n last average scores to implement early stopping
+        """
         trend_window = 25
         if len(averages) > trend_window:
             model = LinearRegression()
@@ -144,9 +152,16 @@ if __name__ == '__main__':
             X = np.reshape(X, (len(X), 1))
             model.fit(X, averages[-trend_window:])
             trend = model.predict(X)
-            if trend[0] > trend[-1]:
+            if trend[0] >= trend[-1]:
                 print("Stopping early")
                 break
+        """
+        trend_window = 25
+        if len(averages) > trend_window:
+            if averages[-1] - averages[-5] < 100:
+                print("Stopping early")
+                break
+
 
         # This is where the magic (should) happens
         scheduler.mutate(rate=current_mutation_rate)
@@ -156,6 +171,7 @@ if __name__ == '__main__':
     # Recap
     best, worst, average, pop_size = scheduler.get_population_stats()
     print(best_individual[0], worst[0], average, pop_size, best[-1])
-    with open('Results{}.json'.format(best_individual[0]), 'w', encoding='utf8') as f:
+    currentDT = datetime.datetime.now().strftime("%d-%m-%Y--%H:%M")
+    with open('./results/Results{}.json'.format(currentDT), 'w', encoding='utf8') as f:
         json.dump(best_individual[1].json_repr(), f, ensure_ascii=False, separators=(',', ':'), indent=4)
     visu = Visualizer(scheduler.initial_schedule.desired_schedule, best_individual[1])
