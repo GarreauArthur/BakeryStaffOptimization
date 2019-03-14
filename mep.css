@@ -1,0 +1,10 @@
+p, pre, li{
+  text-align:justify;
+  font-size:12px;
+}
+h1{
+  text-align:center
+}
+img{
+  max-height:500px
+}
